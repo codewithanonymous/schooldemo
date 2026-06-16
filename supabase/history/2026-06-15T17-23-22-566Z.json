@@ -1,0 +1,1562 @@
+{
+  "timestamp": "2026-06-15T17:23:23.234Z",
+  "sql": "ALTER TABLE \"public\".\"Teacher\" ALTER COLUMN \"sex\" TYPE text USING \"sex\"::text;\nALTER TABLE \"public\".\"Student\" ALTER COLUMN \"sex\" TYPE text USING \"sex\"::text;\nALTER TABLE \"public\".\"Lesson\" ALTER COLUMN \"day\" TYPE text USING \"day\"::text;",
+  "result": {
+    "success": true,
+    "error": null
+  },
+  "before": {
+    "fkeys": [
+      {
+        "table_name": "Student",
+        "column_name": "parentId",
+        "foreign_table_name": "Parent",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Student",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Student",
+        "column_name": "gradeId",
+        "foreign_table_name": "Grade",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Class",
+        "column_name": "supervisorId",
+        "foreign_table_name": "Teacher",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Class",
+        "column_name": "gradeId",
+        "foreign_table_name": "Grade",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Lesson",
+        "column_name": "subjectId",
+        "foreign_table_name": "Subject",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Lesson",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Lesson",
+        "column_name": "teacherId",
+        "foreign_table_name": "Teacher",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Exam",
+        "column_name": "lessonId",
+        "foreign_table_name": "Lesson",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Assignment",
+        "column_name": "lessonId",
+        "foreign_table_name": "Lesson",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Result",
+        "column_name": "examId",
+        "foreign_table_name": "Exam",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Result",
+        "column_name": "assignmentId",
+        "foreign_table_name": "Assignment",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Result",
+        "column_name": "studentId",
+        "foreign_table_name": "Student",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Attendance",
+        "column_name": "studentId",
+        "foreign_table_name": "Student",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Attendance",
+        "column_name": "lessonId",
+        "foreign_table_name": "Lesson",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Event",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Announcement",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "_SubjectToTeacher",
+        "column_name": "A",
+        "foreign_table_name": "Subject",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "_SubjectToTeacher",
+        "column_name": "B",
+        "foreign_table_name": "Teacher",
+        "foreign_column_name": "id"
+      }
+    ],
+    "tables": [
+      {
+        "table_name": "Admin"
+      },
+      {
+        "table_name": "Student"
+      },
+      {
+        "table_name": "Teacher"
+      },
+      {
+        "table_name": "Grade"
+      },
+      {
+        "table_name": "Class"
+      },
+      {
+        "table_name": "Subject"
+      },
+      {
+        "table_name": "Exam"
+      },
+      {
+        "table_name": "Result"
+      },
+      {
+        "table_name": "Attendance"
+      },
+      {
+        "table_name": "Event"
+      },
+      {
+        "table_name": "_SubjectToTeacher"
+      },
+      {
+        "table_name": "Parent"
+      },
+      {
+        "table_name": "Lesson"
+      },
+      {
+        "table_name": "Assignment"
+      },
+      {
+        "table_name": "Announcement"
+      }
+    ],
+    "columns": [
+      {
+        "data_type": "boolean",
+        "table_name": "Attendance",
+        "column_name": "present",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Student",
+        "column_name": "gradeId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Attendance",
+        "column_name": "lessonId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Event",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Event_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "USER-DEFINED",
+        "table_name": "Teacher",
+        "column_name": "sex",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Teacher",
+        "column_name": "createdAt",
+        "is_nullable": "NO",
+        "column_default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Event",
+        "column_name": "startTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Event",
+        "column_name": "endTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Event",
+        "column_name": "classId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Result_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "score",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "examId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "assignmentId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Teacher",
+        "column_name": "birthday",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "_SubjectToTeacher",
+        "column_name": "A",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Grade",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Grade_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Grade",
+        "column_name": "level",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Class",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Class_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Student",
+        "column_name": "birthday",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Class",
+        "column_name": "capacity",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Student",
+        "column_name": "createdAt",
+        "is_nullable": "NO",
+        "column_default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Class",
+        "column_name": "gradeId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Subject",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Subject_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Parent",
+        "column_name": "createdAt",
+        "is_nullable": "NO",
+        "column_default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Lesson",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Lesson_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "USER-DEFINED",
+        "table_name": "Student",
+        "column_name": "sex",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "USER-DEFINED",
+        "table_name": "Lesson",
+        "column_name": "day",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Lesson",
+        "column_name": "startTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Lesson",
+        "column_name": "endTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Lesson",
+        "column_name": "subjectId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Lesson",
+        "column_name": "classId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Exam",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Exam_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Assignment",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Assignment_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Student",
+        "column_name": "classId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Assignment",
+        "column_name": "startDate",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Assignment",
+        "column_name": "dueDate",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Assignment",
+        "column_name": "lessonId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Announcement",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Announcement_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Exam",
+        "column_name": "startTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Exam",
+        "column_name": "endTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Announcement",
+        "column_name": "date",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Announcement",
+        "column_name": "classId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Exam",
+        "column_name": "lessonId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Attendance",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Attendance_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Attendance",
+        "column_name": "date",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Lesson",
+        "column_name": "teacherId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Admin",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "surname",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "email",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "phone",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "address",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "img",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "bloodType",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "parentId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "surname",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "email",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "phone",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "address",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "img",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "bloodType",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Class",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Class",
+        "column_name": "supervisorId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Subject",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Exam",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Attendance",
+        "column_name": "studentId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Event",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Event",
+        "column_name": "description",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Result",
+        "column_name": "studentId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "_SubjectToTeacher",
+        "column_name": "B",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "surname",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "email",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "phone",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "address",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Lesson",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Admin",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Assignment",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Announcement",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Announcement",
+        "column_name": "description",
+        "is_nullable": "NO",
+        "column_default": null
+      }
+    ],
+    "policies": []
+  },
+  "after": {
+    "fkeys": [
+      {
+        "table_name": "Student",
+        "column_name": "parentId",
+        "foreign_table_name": "Parent",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Student",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Student",
+        "column_name": "gradeId",
+        "foreign_table_name": "Grade",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Class",
+        "column_name": "supervisorId",
+        "foreign_table_name": "Teacher",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Class",
+        "column_name": "gradeId",
+        "foreign_table_name": "Grade",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Lesson",
+        "column_name": "subjectId",
+        "foreign_table_name": "Subject",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Lesson",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Lesson",
+        "column_name": "teacherId",
+        "foreign_table_name": "Teacher",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Exam",
+        "column_name": "lessonId",
+        "foreign_table_name": "Lesson",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Assignment",
+        "column_name": "lessonId",
+        "foreign_table_name": "Lesson",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Result",
+        "column_name": "examId",
+        "foreign_table_name": "Exam",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Result",
+        "column_name": "assignmentId",
+        "foreign_table_name": "Assignment",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Result",
+        "column_name": "studentId",
+        "foreign_table_name": "Student",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Attendance",
+        "column_name": "studentId",
+        "foreign_table_name": "Student",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Attendance",
+        "column_name": "lessonId",
+        "foreign_table_name": "Lesson",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Event",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Announcement",
+        "column_name": "classId",
+        "foreign_table_name": "Class",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "_SubjectToTeacher",
+        "column_name": "A",
+        "foreign_table_name": "Subject",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "_SubjectToTeacher",
+        "column_name": "B",
+        "foreign_table_name": "Teacher",
+        "foreign_column_name": "id"
+      }
+    ],
+    "tables": [
+      {
+        "table_name": "Admin"
+      },
+      {
+        "table_name": "Teacher"
+      },
+      {
+        "table_name": "Student"
+      },
+      {
+        "table_name": "Grade"
+      },
+      {
+        "table_name": "Class"
+      },
+      {
+        "table_name": "Subject"
+      },
+      {
+        "table_name": "Exam"
+      },
+      {
+        "table_name": "Result"
+      },
+      {
+        "table_name": "Attendance"
+      },
+      {
+        "table_name": "Event"
+      },
+      {
+        "table_name": "_SubjectToTeacher"
+      },
+      {
+        "table_name": "Parent"
+      },
+      {
+        "table_name": "Assignment"
+      },
+      {
+        "table_name": "Announcement"
+      },
+      {
+        "table_name": "Lesson"
+      }
+    ],
+    "columns": [
+      {
+        "data_type": "boolean",
+        "table_name": "Attendance",
+        "column_name": "present",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Student",
+        "column_name": "gradeId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Attendance",
+        "column_name": "lessonId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Event",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Event_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Student",
+        "column_name": "birthday",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Grade",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Grade_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Event",
+        "column_name": "startTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Event",
+        "column_name": "endTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Event",
+        "column_name": "classId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Result_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "score",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "examId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Result",
+        "column_name": "assignmentId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Grade",
+        "column_name": "level",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "_SubjectToTeacher",
+        "column_name": "A",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Class",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Class_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Teacher",
+        "column_name": "birthday",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Class",
+        "column_name": "capacity",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Student",
+        "column_name": "createdAt",
+        "is_nullable": "NO",
+        "column_default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Class",
+        "column_name": "gradeId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Subject",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Subject_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Teacher",
+        "column_name": "createdAt",
+        "is_nullable": "NO",
+        "column_default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Exam",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Exam_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Parent",
+        "column_name": "createdAt",
+        "is_nullable": "NO",
+        "column_default": "CURRENT_TIMESTAMP"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Assignment",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Assignment_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Student",
+        "column_name": "classId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Assignment",
+        "column_name": "startDate",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Assignment",
+        "column_name": "dueDate",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Assignment",
+        "column_name": "lessonId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Announcement",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Announcement_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Exam",
+        "column_name": "startTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Exam",
+        "column_name": "endTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Announcement",
+        "column_name": "date",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Announcement",
+        "column_name": "classId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Lesson",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Lesson_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Exam",
+        "column_name": "lessonId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Attendance",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": "nextval('\"Attendance_id_seq\"'::regclass)"
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Lesson",
+        "column_name": "startTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Lesson",
+        "column_name": "endTime",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Lesson",
+        "column_name": "subjectId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "integer",
+        "table_name": "Lesson",
+        "column_name": "classId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "timestamp without time zone",
+        "table_name": "Attendance",
+        "column_name": "date",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Lesson",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Lesson",
+        "column_name": "day",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Admin",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Lesson",
+        "column_name": "teacherId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Admin",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "surname",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "email",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "phone",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "address",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "img",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "bloodType",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Teacher",
+        "column_name": "sex",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "surname",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "email",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "phone",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "address",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "img",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "bloodType",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "sex",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Student",
+        "column_name": "parentId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Class",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Class",
+        "column_name": "supervisorId",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Subject",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Exam",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Attendance",
+        "column_name": "studentId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Event",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Event",
+        "column_name": "description",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Result",
+        "column_name": "studentId",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "_SubjectToTeacher",
+        "column_name": "B",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "id",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "username",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "name",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "surname",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "email",
+        "is_nullable": "YES",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "phone",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Parent",
+        "column_name": "address",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Assignment",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Announcement",
+        "column_name": "title",
+        "is_nullable": "NO",
+        "column_default": null
+      },
+      {
+        "data_type": "text",
+        "table_name": "Announcement",
+        "column_name": "description",
+        "is_nullable": "NO",
+        "column_default": null
+      }
+    ],
+    "policies": []
+  }
+}
