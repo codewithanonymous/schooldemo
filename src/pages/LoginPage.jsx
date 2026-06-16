@@ -99,14 +99,36 @@ const LoginPage = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: '24px', padding: '16px', border: '1px dashed var(--border-color)', borderRadius: 'var(--radius-md)', backgroundColor: 'rgba(255,255,255,0.01)' }}>
-          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '8px', textAlign: 'center' }}>
-            DEMO ACCOUNT DETAILS
+        <div style={{ marginTop: '24px', padding: '16px', border: '1px dashed var(--border-color)', borderRadius: 'var(--radius-md)', backgroundColor: 'rgba(255,255,255,0.02)' }}>
+          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '12px', textAlign: 'center', letterSpacing: '0.05em' }}>
+            DEMO ACCOUNTS — Click to fill
           </div>
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <div><strong>Admin:</strong> admin@example.com / 12345678</div>
-            <div><strong>Teacher:</strong> teacher@example.com / 12345678</div>
-            <div><strong>Student:</strong> student@example.com / 12345678</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {[
+              { label: 'Admin',   email: 'admin@example.com',   color: 'var(--danger)' },
+              { label: 'Teacher', email: 'teacher@example.com', color: 'var(--primary)' },
+              { label: 'Student', email: 'student@example.com', color: 'var(--success)' },
+              { label: 'Parent',  email: 'parent@example.com',  color: 'var(--warning)' },
+            ].map(({ label, email: demoEmail, color }) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => { setEmail(demoEmail); setPassword('12345678') }}
+                style={{
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                  background: 'transparent', border: '1px solid var(--border-color)',
+                  borderRadius: 'var(--radius-sm)', padding: '7px 12px',
+                  cursor: 'pointer', textAlign: 'left', gap: '8px',
+                  transition: 'background 0.15s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <span style={{ fontSize: '11px', fontWeight: 700, color, minWidth: 52 }}>{label}</span>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted)', flex: 1 }}>{demoEmail}</span>
+                <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>12345678</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>

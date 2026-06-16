@@ -1,10 +1,10 @@
-import { createClient } from '@supabase/supabase-js'
+// supabaseClient.js — kept for compatibility but no longer used for data queries.
+// Auth has been migrated to localStorage-based mock auth.
+// Remove this file once Supabase is fully decommissioned.
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.warn("Supabase URL or Anon Key is missing. Please check your .env file.")
+export const supabase = {
+  from: () => ({ select: () => Promise.resolve({ data: [], error: null }), insert: () => Promise.resolve({ data: null, error: null }), update: () => Promise.resolve({ data: null, error: null }), delete: () => Promise.resolve({ data: null, error: null }) }),
+  auth: { getSession: () => Promise.resolve({ data: { session: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }) },
+  rpc: () => Promise.resolve({ data: null, error: null }),
+  functions: { invoke: () => Promise.resolve({ data: null, error: null }) },
 }
-
-export const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder')

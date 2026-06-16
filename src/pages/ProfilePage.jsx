@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { supabase } from '../lib/supabaseClient'
 
 const ProfilePage = () => {
   const { user, role } = useAuth()
@@ -19,27 +18,17 @@ const ProfilePage = () => {
       setError("Passwords do not match!")
       return
     }
-
     setLoading(true)
-    try {
-      const { error: updateError } = await supabase.auth.updateUser({ password })
-      if (updateError) throw updateError
-      setMessage("Password updated successfully!")
-      setPassword('')
-      setConfirmPassword('')
-    } catch (err) {
-      console.error(err)
-      setError(err.message || "Failed to update password.")
-    } finally {
-      setLoading(false)
-    }
+    await new Promise(r => setTimeout(r, 600))
+    setMessage("Password updated successfully! (Demo mode — not persisted)")
+    setPassword('')
+    setConfirmPassword('')
+    setLoading(false)
   }
 
   const getUserDisplayName = () => {
     if (!user) return ''
-    if (user.user_metadata?.name) {
-      return `${user.user_metadata.name} ${user.user_metadata.surname || ''}`
-    }
+    if (user.full_name) return user.full_name
     return user.email?.split('@')[0] || 'User'
   }
 

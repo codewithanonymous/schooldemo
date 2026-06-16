@@ -40,11 +40,12 @@ const Layout = () => {
 
 const HomeRedirect = () => {
   const { role } = useAuth()
-  if (role === 'super_admin') return <Navigate to="/super" replace />
+  if (role === 'super_admin') return <Navigate to="/admin" replace />
   if (role === 'admin') return <Navigate to="/admin" replace />
   if (role === 'teacher') return <Navigate to="/teacher" replace />
   if (role === 'student') return <Navigate to="/student" replace />
   if (role === 'parent') return <Navigate to="/parent" replace />
+  if (role === 'user') return <Navigate to="/dashboard" replace />
   return <Navigate to="/login" replace />
 }
 

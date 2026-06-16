@@ -22,6 +22,7 @@ const Sidebar = () => {
   const navigate = useNavigate()
 
   const getHomeLink = () => {
+    if (role === 'super_admin') return '/admin'
     if (role === 'admin') return '/admin'
     if (role === 'user') return '/dashboard'
     if (role === 'teacher') return '/teacher'
@@ -38,49 +39,49 @@ const Sidebar = () => {
           icon: Home,
           label: "Home",
           href: getHomeLink(),
-          visible: ["admin", "user", "teacher", "student", "parent"],
+          visible: ["super_admin", "admin", "user", "teacher", "student", "parent"],
         },
         {
           icon: GraduationCap,
           label: "Teachers",
           href: "/list/teachers",
-          visible: ["admin", "teacher"],
+          visible: ["super_admin", "admin", "teacher"],
         },
         {
           icon: Users,
           label: "Students",
           href: "/list/students",
-          visible: ["admin", "teacher"],
+          visible: ["super_admin", "admin", "teacher"],
         },
         {
           icon: UserSquare2,
           label: "Parents",
           href: "/list/parents",
-          visible: ["admin", "teacher"],
+          visible: ["super_admin", "admin", "teacher"],
         },
         {
           icon: BookOpen,
           label: "Subjects",
           href: "/list/subjects",
-          visible: ["admin"],
+          visible: ["super_admin", "admin"],
         },
         {
           icon: BookOpenCheck,
           label: "Classes",
           href: "/list/classes",
-          visible: ["admin", "teacher"],
+          visible: ["super_admin", "admin", "teacher"],
         },
         {
           icon: Award,
           label: "Exams",
           href: "/list/exams",
-          visible: ["admin", "teacher", "student", "parent"],
+          visible: ["super_admin", "admin", "teacher", "student", "parent"],
         },
         {
           icon: Megaphone,
           label: "Announcements",
           href: "/list/announcements",
-          visible: ["admin", "teacher", "student", "parent"],
+          visible: ["super_admin", "admin", "teacher", "student", "parent"],
         },
       ],
     },
@@ -91,13 +92,13 @@ const Sidebar = () => {
           icon: User,
           label: "Profile",
           href: "/profile",
-          visible: ["admin", "user", "teacher", "student", "parent"],
+          visible: ["super_admin", "admin", "user", "teacher", "student", "parent"],
         },
         {
           icon: Settings,
           label: "Settings",
           href: "/settings",
-          visible: ["admin", "user", "teacher", "student", "parent"],
+          visible: ["super_admin", "admin", "user", "teacher", "student", "parent"],
         },
       ],
     },

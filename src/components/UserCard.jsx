@@ -1,66 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import React from 'react'
+import { STATS } from '../data/mockData'
 import { Users, GraduationCap, ShieldAlert, Heart, MoreHorizontal } from 'lucide-react'
 
 const UserCard = ({ type }) => {
-  const [count, setCount] = useState(0)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchCount = async () => {
-      try {
-        // Use lowercase snake_case table names matching production schema
-        const tableMap = {
-          admin:   'profiles',   // count profiles with role='admin'
-          teacher: 'teachers',
-          student: 'students',
-          parent:  'parents'
-        }
-        const tableName = tableMap[type] ?? 'students'
-
-        let query = supabase.from(tableName).select('id', { count: 'exact', head: true })
-
-        // For the admin count we filter by role in profiles
-        if (type === 'admin') {
-          query = supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'admin')
-        }
-
-        const { count: tableCount, error } = await query
-
-        if (!error && tableCount !== null) {
-          setCount(tableCount)
-        }
-      } catch (err) {
-        console.error(`Error loading count for ${type}:`, err)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCount()
-  }, [type])
+  const count = STATS[type + 's'] ?? 0
 
   const getIcon = () => {
     switch (type) {
-      case 'admin':
-        return <ShieldAlert size={24} />
-      case 'teacher':
-        return <GraduationCap size={24} />
-      case 'student':
-        return <Users size={24} />
-      case 'parent':
-        return <Heart size={24} />
-      default:
-        return <Users size={24} />
+      case 'admin':   return <ShieldAlert size={24} />
+      case 'teacher': return <GraduationCap size={24} />
+      case 'student': return <Users size={24} />
+      case 'parent':  return <Heart size={24} />
+      default:        return <Users size={24} />
     }
   }
 
   const getColorClass = () => {
     switch (type) {
-      case 'admin': return 'danger'
+      case 'admin':   return 'danger'
       case 'teacher': return 'primary'
       case 'student': return 'success'
-      case 'parent': return 'warning'
-      default: return 'primary'
+      case 'parent':  return 'warning'
+      default:        return 'primary'
     }
   }
 
@@ -76,9 +37,7 @@ const UserCard = ({ type }) => {
             <MoreHorizontal size={16} />
           </button>
         </div>
-        <div className="stat-value">
-          {loading ? '...' : count}
-        </div>
+        <div className="stat-value">{count}</div>
       </div>
     </div>
   )

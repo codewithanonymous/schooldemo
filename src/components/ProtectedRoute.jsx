@@ -20,11 +20,12 @@ export const ProtectedRoute = ({ children, allowedRoles }) => {
   if (allowedRoles && !allowedRoles.includes(role)) {
     // Route to the correct dashboard for this role
     const fallback = {
-      super_admin: '/super',
+      super_admin: '/admin',
       admin:       '/admin',
       teacher:     '/teacher',
       student:     '/student',
-      parent:      '/parent'
+      parent:      '/parent',
+      user:        '/dashboard'
     }
     return <Navigate to={fallback[role] ?? '/login'} replace />
   }
