@@ -1,40 +1,285 @@
-import React, { useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useAuth } from '../../context/AuthContext'
-import { STUDENTS, LESSONS } from '../../data/mockData'
+import { LESSONS } from '../../data/mockData'
+import { STUDENT_LEDGER, CLASSES, SECTIONS } from '../../data/academicMockData'
+import { STUDENT_DETAILS_MAP } from '../../data/studentDetailsMockData'
 import BigCalendar from '../../components/BigCalendar'
 import Announcements from '../../components/Announcements'
+import { Calendar, CreditCard, Award, UserCheck, AlertCircle, FileText, CheckCircle } from 'lucide-react'
 
 const StudentDashboard = () => {
   const { user } = useAuth()
+  const [activeTab, setActiveTab] = useState('schedule')
 
+  // Find current student details
+  const studentId = user?.id || 'usr-student-001'
+  
+  // Resolve class details
+  const studentProfile = useMemo(() => {
+    // Look up in STUDENTS list
+    const stored = localStorage.getItem('erp_students')
+    if (stored) {
+      try {
+        const list = JSON.parse(stored)
+        return list.find(s => s.id === studentId)
+      } catch (_) {}
+    }
+    return null
+  }, [studentId])
+
+  const className = useMemo(() => {
+    if (!studentProfile) return 'Class 4A'
+    const classObj = CLASSES.find(c => c.id === studentProfile.class_id)
+    const secObj = SECTIONS.find(sec => sec.id === studentProfile.grade_id)
+    return `${classObj ? classObj.name : ''} - ${secObj ? secObj.name : ''}`
+  }, [studentProfile])
+
+  // Timetable lessons
   const lessons = useMemo(() => {
-    const student = STUDENTS.find(s => s.id === user?.id)
-    if (!student) return []
+    if (!studentProfile) return []
     return LESSONS
-      .filter(l => l.class_id === student.class_id)
+      .filter(l => l.class_id === studentProfile.class_id)
       .map(l => ({ title: l.name, start: new Date(l.start_time), end: new Date(l.end_time) }))
-  }, [user?.id])
+  }, [studentProfile])
+
+  // Get details
+  const details = useMemo(() => {
+    return STUDENT_DETAILS_MAP[studentId] || { attendance: [], marks: [], feeSummary: { totalFee: 0, paidAmount: 0, pendingAmount: 0 }, payments: [] }
+  }, [studentId])
+
+  const ledger = useMemo(() => {
+    return STUDENT_LEDGER[studentId] || details.feeSummary
+  }, [studentId, details])
+
+  // Attendance stats
+  const attendanceStats = useMemo(() => {
+    const records = details.attendance || []
+    if (records.length === 0) return { rate: 100, present: 0, absent: 0, late: 0 }
+    const present = records.filter(r => r.status === 'PRESENT').length
+    const late = records.filter(r => r.status === 'LATE').length
+    const halfDay = records.filter(r => r.status === 'HALF_DAY').length
+    const absent = records.filter(r => r.status === 'ABSENT').length
+    
+    const totalDays = records.length
+    const attended = present + late + halfDay * 0.5
+    const rate = Math.round((attended / totalDays) * 100)
+    
+    return { rate, present, absent, late, totalDays }
+  }, [details])
+
+  const fmtCurrency = (val) => `₹${Number(val ?? 0).toLocaleString('en-IN')}`
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-      <div>
-        <h1>Student Timetable Dashboard</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>View your class schedule, homework assignments, and announcements.</p>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {/* Banner */}
+      <div className="welcome-banner" style={{ background: 'linear-gradient(135deg, var(--color-primary), #818cf8)', padding: '24px', borderRadius: 'var(--radius-lg)', color: 'white' }}>
+        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 700 }}>Hello, {user?.full_name || 'Student'}!</h1>
+        <p style={{ margin: '6px 0 0 0', opacity: 0.9, fontSize: '14px' }}>
+          Roll No: {studentProfile?.roll_number || '01'} | Admission No: {studentProfile?.admission_number || 'ADM2026001'} | Class: {className}
+        </p>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '32px' }}>
-        <div className="charts-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: 600 }}>Weekly Schedule</h2>
-            <BigCalendar data={lessons} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '420px', width: '100%', justifySelf: 'end' }}>
-            <Announcements />
-          </div>
+      {/* Tabs */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--border-color)', gap: '24px', paddingBottom: '2px' }}>
+        {[
+          { id: 'schedule', label: 'My Timetable', icon: Calendar },
+          { id: 'attendance', label: 'Attendance', icon: UserCheck },
+          { id: 'marks', label: 'Marks & Results', icon: Award },
+          { id: 'fees', label: 'Fee & Payments', icon: CreditCard }
+        ].map(tab => {
+          const Icon = tab.icon
+          const isActive = activeTab === tab.id
+          return (
+            <button 
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: 'none',
+                border: 'none',
+                borderBottom: isActive ? '2px solid var(--color-primary)' : '2px solid transparent',
+                color: isActive ? 'var(--color-primary)' : 'var(--text-secondary)',
+                padding: '8px 4px 12px 4px',
+                fontSize: '14px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <Icon size={16} />
+              <span>{tab.label}</span>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Grid Layout */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '24px', alignItems: 'start' }}>
+        {/* Left main content */}
+        <div style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '20px' }}>
+          
+          {/* TIMETABLE TAB */}
+          {activeTab === 'schedule' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>Weekly Class Schedule</h2>
+              <BigCalendar data={lessons} />
+            </div>
+          )}
+
+          {/* ATTENDANCE TAB */}
+          {activeTab === 'attendance' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>Attendance Summary</h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+                <div style={{ padding: '16px', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>ATTENDANCE RATE</div>
+                  <div style={{ fontSize: '24px', fontWeight: 700, marginTop: '4px', color: attendanceStats.rate >= 75 ? '#10b981' : '#ef4444' }}>{attendanceStats.rate}%</div>
+                </div>
+                <div style={{ padding: '16px', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>DAYS PRESENT</div>
+                  <div style={{ fontSize: '24px', fontWeight: 700, marginTop: '4px', color: '#10b981' }}>{attendanceStats.present}</div>
+                </div>
+                <div style={{ padding: '16px', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>DAYS ABSENT</div>
+                  <div style={{ fontSize: '24px', fontWeight: 700, marginTop: '4px', color: '#ef4444' }}>{attendanceStats.absent}</div>
+                </div>
+                <div style={{ padding: '16px', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>LATE ARRIVALS</div>
+                  <div style={{ fontSize: '24px', fontWeight: 700, marginTop: '4px', color: '#f59e0b' }}>{attendanceStats.late}</div>
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 12px 0' }}>Recent Attendance Logs</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {details.attendance && details.attendance.length > 0 ? (
+                    details.attendance.slice(0, 10).map((r) => (
+                      <div key={r.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-main)', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
+                        <div>
+                          <div style={{ fontSize: '13px', fontWeight: 600 }}>{new Date(r.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{r.remarks || 'No remarks'}</div>
+                        </div>
+                        <span style={{
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          textTransform: 'uppercase',
+                          backgroundColor: r.status === 'PRESENT' ? 'rgba(16, 185, 129, 0.1)' : r.status === 'ABSENT' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
+                          color: r.status === 'PRESENT' ? '#10b981' : r.status === 'ABSENT' ? '#ef4444' : '#f59e0b'
+                        }}>{r.status}</span>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-secondary)' }}>No attendance logs captured.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ACADEMICS / MARKS TAB */}
+          {activeTab === 'marks' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>Academic Report Card</h2>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {details.marks && details.marks.length > 0 ? (
+                  details.marks.map((m) => (
+                    <div key={m.id} style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr 100px', alignItems: 'center', background: 'var(--bg-main)', padding: '14px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+                      <div>
+                        <div style={{ fontSize: '14px', fontWeight: 600 }}>{m.subject}</div>
+                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{m.exam}</div>
+                      </div>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>MARKS</div>
+                        <div style={{ fontSize: '14px', fontWeight: 600 }}>{m.marksObtained} / {m.maxMarks}</div>
+                      </div>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>PERCENTAGE</div>
+                        <div style={{ fontSize: '14px', fontWeight: 600 }}>{m.percentage}%</div>
+                      </div>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>GRADE</div>
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: m.grade === 'A+' || m.grade === 'O' ? '#10b981' : '#6366f1' }}>{m.grade}</div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <span style={{
+                          fontSize: '11px',
+                          fontWeight: 700,
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          backgroundColor: m.marksObtained >= (m.maxMarks * 0.35) ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                          color: m.marksObtained >= (m.maxMarks * 0.35) ? '#10b981' : '#ef4444'
+                        }}>{m.marksObtained >= (m.maxMarks * 0.35) ? 'PASS' : 'FAIL'}</span>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-secondary)' }}>No examination marks published yet.</div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* FEES TAB */}
+          {activeTab === 'fees' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 600, margin: 0 }}>Fee Summary & Ledger</h2>
+              
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                <div style={{ padding: '16px', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>TOTAL ACADEMIC FEE</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, marginTop: '4px', color: 'var(--text-main)' }}>{fmtCurrency(ledger.totalFee)}</div>
+                </div>
+                <div style={{ padding: '16px', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>TOTAL AMOUNT PAID</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, marginTop: '4px', color: '#10b981' }}>{fmtCurrency(ledger.paidAmount)}</div>
+                </div>
+                <div style={{ padding: '16px', background: 'var(--bg-main)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>OUTSTANDING DUE</div>
+                  <div style={{ fontSize: '20px', fontWeight: 700, marginTop: '4px', color: ledger.pendingAmount > 0 ? '#ef4444' : '#10b981' }}>{fmtCurrency(ledger.pendingAmount)}</div>
+                </div>
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 12px 0' }}>Transaction History</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {ledger.payments && ledger.payments.length > 0 ? (
+                    ledger.payments.map((p) => (
+                      <div key={p.receiptNumber} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-main)', padding: '12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-color)' }}>
+                        <div>
+                          <div style={{ fontSize: '13px', fontWeight: 600 }}>{p.receiptNumber}</div>
+                          <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>
+                            Date: {p.date} | Mode: {p.paymentMethod} {p.transactionId ? `| Txn Ref: ${p.transactionId}` : ''}
+                          </div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '14px', fontWeight: 700, color: '#10b981' }}>+{fmtCurrency(p.amount)}</div>
+                          <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)' }}>SUCCESS</span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-secondary)' }}>No transactions recorded yet.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* Right sidebar announcements */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <Announcements />
         </div>
       </div>
     </div>
   )
 }
 
-export default StudentDashboard
+export default StudentDashboard;

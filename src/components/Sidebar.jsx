@@ -13,7 +13,11 @@ import {
   Megaphone, 
   User, 
   Settings, 
-  LogOut 
+  LogOut,
+  Briefcase,
+  TrendingUp,
+  CreditCard,
+  Lock
 } from 'lucide-react'
 
 const Sidebar = () => {
@@ -42,16 +46,46 @@ const Sidebar = () => {
           visible: ["super_admin", "admin", "user", "teacher", "student", "parent"],
         },
         {
+          icon: Calendar,
+          label: "Roll Call",
+          href: "/teacher/attendance",
+          visible: ["teacher"],
+        },
+        {
+          icon: Award,
+          label: "Grade Book",
+          href: "/teacher/marks",
+          visible: ["teacher"],
+        },
+        {
+          icon: TrendingUp,
+          label: "Performance",
+          href: "/teacher/performance",
+          visible: ["teacher"],
+        },
+        {
           icon: GraduationCap,
           label: "Teachers",
           href: "/list/teachers",
           visible: ["super_admin", "admin", "teacher"],
         },
         {
+          icon: Briefcase,
+          label: "Staff Management",
+          href: "/list/staff",
+          visible: ["super_admin", "admin"],
+        },
+        {
           icon: Users,
           label: "Students",
           href: "/list/students",
           visible: ["super_admin", "admin", "teacher"],
+        },
+        {
+          icon: Lock,
+          label: "Credentials",
+          href: "/admin/credentials",
+          visible: ["super_admin", "admin"],
         },
         {
           icon: UserSquare2,
@@ -82,6 +116,12 @@ const Sidebar = () => {
           label: "Announcements",
           href: "/list/announcements",
           visible: ["super_admin", "admin", "teacher", "student", "parent"],
+        },
+        {
+          icon: CreditCard,
+          label: "Fee Management",
+          href: "/admin/fee/dashboard",
+          visible: ["super_admin", "admin"],
         },
       ],
     },

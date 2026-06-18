@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom'
+import DesktopOnlyGuard from './components/DesktopOnlyGuard'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Sidebar from './components/Sidebar'
@@ -9,6 +10,9 @@ import Navbar from './components/Navbar'
 import LoginPage from './pages/LoginPage'
 import AdminDashboard from './pages/admin/Dashboard'
 import TeacherDashboard from './pages/teacher/TeacherDashboard'
+import TeacherAttendance from './pages/teacher/TeacherAttendance'
+import TeacherMarks from './pages/teacher/TeacherMarks'
+import TeacherPerformance from './pages/teacher/TeacherPerformance'
 import StudentDashboard from './pages/student/StudentDashboard'
 import ParentDashboard from './pages/parent/ParentDashboard'
 import Teachers from './pages/admin/Teachers'
@@ -23,6 +27,20 @@ import SettingsPage from './pages/SettingsPage'
 import Testing from './pages/Testing'
 import SchemaChecker from './pages/SchemaChecker'
 import Dashboard from './pages/Dashboard'
+import StudentCredentials from './pages/admin/StudentCredentials'
+import CredentialsManagement from './pages/admin/CredentialsManagement'
+
+// Fee Management Workspace Components
+import FeeLayout from './pages/admin/fee/FeeLayout'
+import FeeDashboard from './pages/admin/fee/FeeDashboard'
+import FeeStructure from './pages/admin/fee/FeeStructure'
+import FeeStudents from './pages/admin/fee/FeeStudents'
+import FeeCollections from './pages/admin/fee/FeeCollections'
+import FeePending from './pages/admin/fee/FeePending'
+import FeeTransactions from './pages/admin/fee/FeeTransactions'
+import FeeReceipts from './pages/admin/fee/FeeReceipts'
+import FeeReports from './pages/admin/fee/FeeReports'
+
 
 const Layout = () => {
   return (
@@ -51,6 +69,7 @@ const HomeRedirect = () => {
 
 function App() {
   return (
+    <DesktopOnlyGuard>
     <AuthProvider>
       <BrowserRouter>
         <Routes>
@@ -66,13 +85,32 @@ function App() {
 
             {/* Dashboards */}
             <Route path="admin" element={<ProtectedRoute allowedRoles={['admin']}><AdminDashboard /></ProtectedRoute>} />
+            <Route path="admin/students" element={<ProtectedRoute allowedRoles={['admin']}><StudentCredentials /></ProtectedRoute>} />
+            <Route path="admin/credentials" element={<ProtectedRoute allowedRoles={['admin']}><CredentialsManagement /></ProtectedRoute>} />
+
+            {/* Fee Management Mini-ERP Routing */}
+            <Route path="admin/fee" element={<ProtectedRoute allowedRoles={['admin']}><FeeLayout /></ProtectedRoute>}>
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<FeeDashboard />} />
+              <Route path="structure" element={<FeeStructure />} />
+              <Route path="students" element={<FeeStudents />} />
+              <Route path="collections" element={<FeeCollections />} />
+              <Route path="pending" element={<FeePending />} />
+              <Route path="transactions" element={<FeeTransactions />} />
+              <Route path="receipts" element={<FeeReceipts />} />
+              <Route path="reports" element={<FeeReports />} />
+            </Route>
             <Route path="dashboard" element={<ProtectedRoute allowedRoles={['user']}><Dashboard /></ProtectedRoute>} />
             <Route path="teacher" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherDashboard /></ProtectedRoute>} />
+            <Route path="teacher/attendance" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherAttendance /></ProtectedRoute>} />
+            <Route path="teacher/marks" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherMarks /></ProtectedRoute>} />
+            <Route path="teacher/performance" element={<ProtectedRoute allowedRoles={['teacher']}><TeacherPerformance /></ProtectedRoute>} />
             <Route path="student" element={<ProtectedRoute allowedRoles={['student']}><StudentDashboard /></ProtectedRoute>} />
             <Route path="parent" element={<ProtectedRoute allowedRoles={['parent']}><ParentDashboard /></ProtectedRoute>} />
 
             {/* CRUD Resource Lists */}
-            <Route path="list/teachers" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><Teachers /></ProtectedRoute>} />
+            <Route path="list/teachers" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><Teachers mode="teachers" /></ProtectedRoute>} />
+            <Route path="list/staff" element={<ProtectedRoute allowedRoles={['admin']}><Teachers mode="staff" /></ProtectedRoute>} />
             <Route path="list/students" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><Students /></ProtectedRoute>} />
             <Route path="list/parents" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><Parents /></ProtectedRoute>} />
             <Route path="list/classes" element={<ProtectedRoute allowedRoles={['admin', 'teacher']}><Classes /></ProtectedRoute>} />
@@ -90,6 +128,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </DesktopOnlyGuard>
   )
 }
 

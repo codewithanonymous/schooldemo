@@ -42,21 +42,77 @@ export const AuthProvider = ({ children }) => {
       // Simulate a tiny network delay for realism
       await new Promise(r => setTimeout(r, 600))
 
-      const match = DEMO_USERS.find(
+      // 1. Try to match DEMO_USERS first (including admin, demo student, demo teacher, demo parent)
+      let match = DEMO_USERS.find(
         u => u.email.toLowerCase() === email.toLowerCase() && u.password === password
       )
 
-      if (!match) {
-        throw new Error('Invalid email or password. Please check the demo credentials below.')
+      let sessionUser = null;
+
+      if (match) {
+        sessionUser = {
+          id:         match.id,
+          email:      match.email,
+          role:       match.role,
+          full_name:  match.name,
+          created_at: match.created_at,
+        };
+      } else {
+        // 2. Try to match students in erp_students from localStorage
+        try {
+          const storedStudents = localStorage.getItem('erp_students');
+          if (storedStudents) {
+            const students = JSON.parse(storedStudents);
+            const studentMatch = students.find(s => 
+              (s.admission_number?.toLowerCase() === email.toLowerCase() || 
+               s.username?.toLowerCase() === email.toLowerCase() || 
+               s.email?.toLowerCase() === email.toLowerCase()) && 
+              s.password === password
+            );
+            if (studentMatch) {
+              sessionUser = {
+                id:         studentMatch.id,
+                email:      studentMatch.email || `${studentMatch.username}@school.com`,
+                role:       'student',
+                full_name:  `${studentMatch.name} ${studentMatch.surname}`,
+                created_at: studentMatch.admission_date || new Date().toISOString(),
+              };
+            }
+          }
+        } catch (e) {
+          console.error("Student login match error", e);
+        }
+
+        // 3. Try to match teachers/staff in erp_staff_list from localStorage
+        if (!sessionUser) {
+          try {
+            const storedStaff = localStorage.getItem('erp_staff_list');
+            if (storedStaff) {
+              const staff = JSON.parse(storedStaff);
+              const teacherMatch = staff.find(t => 
+                (t.employee_id?.toLowerCase() === email.toLowerCase() || 
+                 t.username?.toLowerCase() === email.toLowerCase() || 
+                 t.email?.toLowerCase() === email.toLowerCase()) && 
+                t.password === password
+              );
+              if (teacherMatch) {
+                sessionUser = {
+                  id:         teacherMatch.id,
+                  email:      teacherMatch.email || `${teacherMatch.username}@school.com`,
+                  role:       'teacher',
+                  full_name:  `${teacherMatch.name} ${teacherMatch.surname}`,
+                  created_at: teacherMatch.joining_date || new Date().toISOString(),
+                };
+              }
+            }
+          } catch (e) {
+            console.error("Teacher login match error", e);
+          }
+        }
       }
 
-      // Build a user object mimicking the shape the rest of the app expects
-      const sessionUser = {
-        id:         match.id,
-        email:      match.email,
-        role:       match.role,
-        full_name:  match.name,
-        created_at: match.created_at,
+      if (!sessionUser) {
+        throw new Error('Invalid email, username, or password. Please verify your credentials.')
       }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(sessionUser))
